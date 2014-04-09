@@ -1,7 +1,7 @@
 from django.contrib.staticfiles.management.commands.runserver \
     import Command as StaticFilesCommand
 
-from jsdir.base import JSDir
+from jsdir.core import JSDir
 
 
 class Command(StaticFilesCommand):
