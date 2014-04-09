@@ -21,6 +21,9 @@ class CollectStaticTests(TestCase):
 
         self.assertFalse(os.path.exists(os.path.join(js_dir,
                                                      'big_script.dir.js')))
+
+        self.assertFalse(os.path.exists(os.path.join(js_dir, 'libs.js')))
+
         self.assertListEqual(os.listdir(os.path.join(js_dir, 'big_script')),
                              os.listdir(os.path.join(os.path.dirname(__file__),
                                                      'static', 'js',
@@ -36,8 +39,11 @@ class CollectStaticTests(TestCase):
         render_to_string('jsdir.%shtml' % \
             ('dj' if settings.SET == 'django' else 'jj'), {})
 
-        self.assertTrue(os.path.exists(os.path.join(settings.STATIC_ROOT, 'js',
+        js_dir = os.path.join(settings.STATIC_ROOT, 'js')
+
+        self.assertTrue(os.path.exists(os.path.join(js_dir,
                                                     'big_script.dir.js')))
+        self.assertFalse(os.path.exists(os.path.join(js_dir, 'libs.js')))
 
     def test_regenerate(self):
 

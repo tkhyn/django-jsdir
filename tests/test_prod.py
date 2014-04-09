@@ -25,11 +25,12 @@ class JSDirProdTests(JSDirTestCase):
         generated = render_to_string('jsdir.%shtml' % \
             ('dj' if settings.SET == 'django' else 'jj'), {})
 
-        big_script = \
-            os.path.join(settings.STATIC_ROOT, 'js', 'big_script.dir.js')
-        self.assertTrue(os.path.isfile(big_script))
+        js_dir = os.path.join(settings.STATIC_ROOT, 'js')
+        self.assertTrue(os.path.isfile(os.path.join(js_dir,
+                                                    'big_script.dir.js')))
+        self.assertFalse(os.path.exists(os.path.join(js_dir, 'libs.js')))
 
-        bs = open(big_script, 'r')
+        bs = open(os.path.join(js_dir, 'big_script.dir.js'), 'r')
         self.assertListEqual(bs.read().splitlines(),
             ["var x1 = 'file1';",
              "var x2 = 'file2';",
@@ -38,8 +39,8 @@ class JSDirProdTests(JSDirTestCase):
 
         self.assertListEqual(generated.strip().splitlines(),
             ['<script type="text/javascript" src="/static/js/big_script.dir.js"></script>',
-             '<script type="text/javascript" src="/static/js/libs/lib1.min.js"></script>',
-             '<script type="text/javascript" src="/static/js/libs/lib2.min.js"></script>']
+             '<script type="text/javascript" src="/static/js/libs/lib2.min.js"></script>',
+             '<script type="text/javascript" src="/static/js/libs/lib1.min.js"></script>']
         )
 
     def test_expanded(self):
@@ -48,10 +49,13 @@ class JSDirProdTests(JSDirTestCase):
         generated = render_to_string('jsdir.%shtml' % \
             ('dj' if settings.SET == 'django' else 'jj'), {})
 
+        js_dir = os.path.join(settings.STATIC_ROOT, 'js')
+        self.assertFalse(os.path.exists(os.path.join(js_dir, 'libs.js')))
+
         self.assertListEqual(generated.strip().splitlines(),
             ['<script type="text/javascript" src="/static/js/big_script/01-file1.js"></script>',
              '<script type="text/javascript" src="/static/js/big_script/02-file2.js"></script>',
              '<script type="text/javascript" src="/static/js/big_script/03-file3.js"></script>',
-             '<script type="text/javascript" src="/static/js/libs/lib1.js"></script>',
-             '<script type="text/javascript" src="/static/js/libs/lib2.js"></script>']
+             '<script type="text/javascript" src="/static/js/libs/lib2.js"></script>',
+             '<script type="text/javascript" src="/static/js/libs/lib1.js"></script>']
         )

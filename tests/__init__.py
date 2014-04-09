@@ -21,7 +21,7 @@ def run(settings_set):
     settings._wrapped = empty
 
     settings.configure(**{k: getattr(SETTINGS, k) for k in dir(SETTINGS) \
-                              if k[0].isupper()})
+                             if k[0].isupper()})
 
     from django.test.simple import DjangoTestSuiteRunner
 

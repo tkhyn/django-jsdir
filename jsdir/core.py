@@ -24,7 +24,7 @@ class JSDir(object):
 
     finders_usage = {}
 
-    def __init__(self, path, expand=False, minify=True):
+    def __init__(self, path, expand=False, **kwargs):
 
         is_absolute = path.startswith('/') or ':' in path.split('/')[0]
         if is_absolute:
@@ -54,7 +54,19 @@ class JSDir(object):
             self.abs_jsd_path = staticfiles_storage.path(self.jsd_path)
 
         self.expand = expand or settings.DEBUG or self.use_finders
-        self.minify = not settings.DEBUG and expand and minify
+        if self.expand:
+            self.minify = not settings.DEBUG and expand and \
+                          kwargs.get('minify', True)
+            firsts = kwargs.get('first', '').split(';')
+            self.first = [x.strip() for x in firsts if x]
+            lasts = kwargs.get('last', '').split(';')
+            self.last = [x.strip() for x in lasts if x]
+        else:
+            # there should not be any more kwargs if expand is False
+            assert not kwargs
+            self.minify = False
+            self.first = []
+            self.last = []
 
     @classmethod
     def set_use_finders(cls, val=True):
@@ -126,12 +138,31 @@ class JSDir(object):
         Walks in the JS directory, executing action for all the js files
         encountered
 
-        :param action: a function taking the absolute path of the file as sole
-                       argument
+        :param get_item: a function taking the absolute path of the file as
+                         sole argument
         :returns: the list of parsed files
         """
 
-        items = []
+        firsts = [[] for x in self.first]
+        middle = []
+        lasts = [[] for x in self.last]
+
+        def append_item(path):
+            name = os.path.split(path)[-1].replace('.min', '')
+            item = get_item(path)
+            # look in firsts
+            for i, x in enumerate(self.first):
+                if x in name:
+                    firsts[i].append(item)
+                    return
+            # look in lasts
+            for i, x in enumerate(self.last):
+                if x in name:
+                    lasts[i].append(item)
+                    return
+            # not found, append in the middle
+            middle.append(item)
+
         fifo = deque([self.abs_dir_path])
         while fifo:
             p = fifo.popleft()
@@ -147,7 +178,17 @@ class JSDir(object):
                         if not minified:
                             continue
                     elif minified:
-                        # we are in concat mode, ignore minified files
+                        # we are in concat or non-minified mode,
+                        # ignore minified files
                         continue
-                    items.append(get_item(full_p))
-        return items
+                    append_item(full_p)
+
+        # concatenates the lists
+        result = []
+        for l in firsts:
+            result.extend(l)
+        result.extend(middle)
+        for l in reversed(lasts):
+            result.extend(l)
+
+        return result

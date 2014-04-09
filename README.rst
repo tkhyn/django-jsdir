@@ -32,6 +32,9 @@ Setup
 How it works
 ------------
 
+Directory concatenation
+.......................
+
 A short real-life example is better than long boring explanations. Suppose you
 have the following JS files layout::
 
@@ -83,8 +86,8 @@ files anymore.
    concatenated in the foo.js file.
 
 
-Force expand a directory
-------------------------
+Inclusion of all files in a directory
+.....................................
 
 Sometimes, you will prefer to import the javascript files from a directory
 without seeing them concatenated at all. It is the case if you have a 'lib'
@@ -98,12 +101,38 @@ versions of the scripts (files named *.min.js) and return corresponding HTML
 tags. If you don't want this behavior, you can use the tag argument
 ``minified`` and set it to ``False``::
 
-   {% jsdir 'lib/' expand=True minified=False %}
+   {% jsdir 'lib' expand=True minified=False %}
 
 Remember that the order in which the HTML tags will appear in the document,
 and therefore the order in which the JS files will be loaded is still
-alphabetic.
+alphabetic. You can however ask django-jsdir to load certain files first or
+last.
 
+``first`` and ``last`` keywords
++++++++++++++++++++++++++++++++
+
+In case you want to load some files first in the included expanded directory,
+django-jsdir provides the ``first`` and ``last`` keywords.
+
+Use them like that::
+
+   {% jsdir 'lib' expand=True first='1st; 2nd' last='verylast; 2ndtolast' %}
+
+Any file which name contains '1st' will be loaded before any file which name
+contains '2nd', which will be loaded before any other file, which will be
+loaded before any file which name contains '2ndtolast', which will be loaded
+before any file which name contains 'verylast'.
+
+Note that:
+
+- the lookup is case-sensitive, even on Windows platforms
+- you should use semicolons to separate the names
+- spaces are stripped from the beginning and the end of each name
+- 'file.js' matches 'file.js' `and` 'file.min.js'
+
+.. warning::
+   ``first`` and ``last`` keywords are only available when ``expand=True`` is
+   used
 
 Compression
 -----------
