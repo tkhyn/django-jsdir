@@ -23,8 +23,8 @@ Setup
 
 1. Install using your prefered method
 2. Add ``'jsdir'`` to your INSTALLED_APPS
-3. If you are using Jinja2, add ``'jsdir.jjext'`` to your Jinja2 extensions
-   list
+3. If you are using Jinja2, add ``'jsdir.jinja.ext'`` to your Jinja2
+   extensions list
 
 
 How it works

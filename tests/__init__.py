@@ -5,6 +5,8 @@ Runs the tests with the matching settings set
 import shutil
 from importlib import import_module
 
+from django.template import loader
+
 
 def run(settings_set):
 
@@ -13,7 +15,10 @@ def run(settings_set):
     SETTINGS = import_module('tests.settings.' + settings_set)
     from django.conf import settings, empty
 
+    # various reset tweaks
+    loader.template_source_loaders = None
     settings._wrapped = empty
+
     settings.configure(**{k: getattr(SETTINGS, k) for k in dir(SETTINGS) \
                               if k[0].isupper()})
 
