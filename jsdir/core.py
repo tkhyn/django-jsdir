@@ -26,6 +26,11 @@ class JSDir(object):
 
     def __init__(self, path):
 
+        is_absolute = path.startswith('/') or ':' in path.split('/')[0]
+        if is_absolute:
+            raise NotImplementedError('jsdir: absolute urls like %s are not '
+                                      'supported' % path)
+
         # determine if we should use the staticfiles_storage to determine
         # the file system paths or if we should use the staticfiles finders
         self.use_finders = self.finders_usage.get(
