@@ -1,5 +1,4 @@
 import os
-from collections import deque
 
 
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -161,13 +160,11 @@ class JSDir(object):
             # not found, append in the middle
             middle.append(item)
 
-        fifo = deque([self.abs_dir_path])
-        while fifo:
-            p = fifo.popleft()
-            for x in sorted(os.listdir(p)):
-                full_p = os.path.join(p, x)
+        def walk(path):
+            for x in sorted(os.listdir(path)):
+                full_p = os.path.join(path, x)
                 if os.path.isdir(full_p):
-                    fifo.append(full_p)
+                    walk(full_p)
                 elif x.endswith('.js'):
                     minified = x.endswith('.min.js')
                     if self.minify:
@@ -180,6 +177,8 @@ class JSDir(object):
                         # ignore minified files
                         continue
                     append_item(full_p)
+
+        walk(self.abs_dir_path)
 
         # concatenates the lists
         result = []
