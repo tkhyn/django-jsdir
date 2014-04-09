@@ -8,20 +8,20 @@ from django.contrib.staticfiles.finders import find
 from django.conf import settings
 
 
+js_tag = '<script type="text/javascript" src="%s"></script>'
+jsdir_ext = '.dir.js'
+
+
 class JSDir(object):
     """
     A class describing a JS directory and implementing methods to carry out
     operations on it
 
-    :ivar js_tag: an HTML script tag template
-    :jsdir_ext: the extension for generated script files
     :finders_usage: a (thread_id, use_finders) dictionary.
                     finders_usage[thread_id] is set to true through the
                     runserver management command
     """
 
-    js_tag = '<script type="text/javascript" src="%s"></script>'
-    jsdir_ext = '.dir.js'
     finders_usage = {}
 
     def __init__(self, path):
@@ -44,7 +44,7 @@ class JSDir(object):
         # rel path of the directory % static root
         self.dir_path = path
         # rel path of the generated file % static root
-        self.jsd_path = path + self.jsdir_ext
+        self.jsd_path = path + jsdir_ext
 
         if self.use_finders:
             self.abs_dir_path = find(path)
@@ -87,7 +87,7 @@ class JSDir(object):
             return os.path.relpath(path, static_base).replace('\\', '/')
 
         paths = self._walk(get_item)
-        return '\n'.join([(self.js_tag % staticfiles_storage.url(rel_p)) \
+        return '\n'.join([(js_tag % staticfiles_storage.url(rel_p)) \
                           for rel_p in paths])
 
     def _get_concat_tag(self):
@@ -96,11 +96,11 @@ class JSDir(object):
         """
 
         if not self.abs_jsd_path or not os.path.exists(self.abs_jsd_path):
-            self._concatenate()
+            self.concatenate()
 
-        return self.js_tag % staticfiles_storage.url(self.jsd_path)
+        return js_tag % staticfiles_storage.url(self.jsd_path)
 
-    def _concatenate(self):
+    def concatenate(self):
         """
         Concatenates all the elementary scripts in one bigger concatenated
         file
@@ -114,7 +114,7 @@ class JSDir(object):
 
         out_path = self.abs_jsd_path
         if not out_path:
-            out_path = self.abs_dir_path + self.jsdir_ext
+            out_path = self.abs_dir_path + jsdir_ext
 
         out = open(out_path, 'w')
         out.write(''.join(big_script))

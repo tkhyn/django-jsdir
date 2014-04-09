@@ -22,7 +22,8 @@ Setup
 -----
 
 1. Install using your prefered method
-2. Add ``'jsdir'`` to your INSTALLED_APPS
+2. Add ``'jsdir'`` to your INSTALLED_APPS `after`
+   ``'django.contrib.staticfiles'``
 3. If you are using Jinja2, add ``'jsdir.jinja.ext'`` to your Jinja2
    extensions list
 
@@ -56,14 +57,15 @@ refering to big_script/\*.js files in your template, and replace them by::
 
 django-jsdir will then take care of:
 
-1. linking all the scripts nested under big_script.js directory tree when in
+1. linking all the scripts nested under big_script directory tree when in
    development mode with files served from the application's static directory.
    This will change nothing from the developer's point of view, except he won't
    need to update the script list anymore
 2. concatenating (and possibly compressing, with the help of
    django-compressor_) all the nested subscripts in one file named
-   `big_script.js` when you'll run ``manage.py collectstatic``
-3. linking the generated `big_script.js` when in production mode
+   `big_script.dir.js` either on the first request or when you'll run
+   ``manage.py collectstatic``, depending if the file already exists or not
+3. linking the generated `big_script.dir.js` when in production mode
 
 In other words, you do not have to change your production template (or scratch
 your head to find a way to do it programmatically with conditional extends or
@@ -83,9 +85,9 @@ files anymore.
 Compression
 -----------
 
-If you wish to have your big_script.js compressed, django-jsdir integrates
-without a fuss with django-compressor_. The big_script.js can get compressed as
-any other js file. Simply use::
+If you wish to have big_script.dir.js compressed, django-jsdir integrates
+without a fuss with django-compressor_. The script gets compressed like any
+other js file. Simply use::
 
     {% compress %}
         {% jsdir 'big_script' %}
