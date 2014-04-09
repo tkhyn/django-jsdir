@@ -13,7 +13,6 @@ EXC_PACKAGES = ()  # tuple of strings
 
 install_requires = (
     'Django>=1.6',
-    'slimit'
 )
 
 # imports __version__ variable
@@ -36,9 +35,9 @@ metadata = dict(
     description='Eases the management of JS files in a django app',
     author='Thomas Khyn',
     author_email='thomas@ksytek.com',
-    url='http://open.ksytek.com/django-jsdir/',  # TODO: check url
-    keywords=[],  # TODO: add keywords
-    classifiers=[  # TODO: add classifiers
+    url='http://bitbucket.org/tkhyn/django-jsdir/',
+    keywords=['js', 'javascript', 'directory', 'concatenate'],
+    classifiers=[
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
         'License :: OSI Approved :: MIT License',
@@ -51,7 +50,13 @@ metadata = dict(
         'Topic :: Text Processing',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities',
-    ]
+    ],
+    include_package_data=True,
+    package_data={
+        '': ['LICENSE.txt', 'README.rst']
+    },
+    entry_points={'tests': ['default = runtests.main']},
+    extras_require={'tests': ('djinga',)},
 )
 
 
@@ -83,6 +88,6 @@ def read(filename):
 
 setup(**dict(metadata,
    packages=packages,
-   long_description=read('README.txt'),  # use reST in README.txt !
+   long_description=read('README.rst'),
    install_requires=install_requires
 ))

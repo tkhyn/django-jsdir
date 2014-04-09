@@ -1,10 +1,9 @@
-from tests import settings as SETTINGS
-from django.conf import settings
+from tests import run
 
-settings.configure(**{k: getattr(SETTINGS, k) for k in dir(SETTINGS) \
-                          if k[0].isupper()})
 
-from django.test.simple import DjangoTestSuiteRunner
+def main():
+    for s in ('django', 'jinja'):
+        run(s)
 
-test_runner = DjangoTestSuiteRunner(verbosity=1)
-test_runner.run_tests(['tests', ])
+if __name__ == '__main__':
+    main()
