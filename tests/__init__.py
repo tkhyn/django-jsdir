@@ -2,6 +2,7 @@
 Runs the tests with the matching settings set
 """
 
+import shutil
 from importlib import import_module
 
 
@@ -20,3 +21,5 @@ def run(settings_set):
 
     test_runner = DjangoTestSuiteRunner(verbosity=1)
     test_runner.run_tests(['tests', ])
+
+    shutil.rmtree(settings.STATIC_ROOT)
