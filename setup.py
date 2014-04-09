@@ -1,19 +1,13 @@
 """
 django-jsdir
-Drastically eases management of JS files in a django app
+Eases the management of JS files in a django app
 (c) 2014 Thomas Khyn
 MIT license (see LICENSE.txt)
 """
 
-from distutils.core import setup
+from setuptools import setup, find_packages
 import os
 
-INC_PACKAGES = 'jsdir',  # string or tuple of strings
-EXC_PACKAGES = ()  # tuple of strings
-
-install_requires = (
-    'Django>=1.6',
-)
 
 # imports __version__ variable
 exec(open('jsdir/version.py').read())
@@ -29,10 +23,11 @@ DEV_STATUS = {'pre': '2 - Pre-Alpha',
               'final': '5 - Production/Stable'}
 
 # setup function parameters
-metadata = dict(
+setup(
     name='django-jsdir',
     version=__version__,
     description='Eases the management of JS files in a django app',
+    long_description=open(os.path.join('README.rst')).read(),
     author='Thomas Khyn',
     author_email='thomas@ksytek.com',
     url='http://bitbucket.org/tkhyn/django-jsdir/',
@@ -51,43 +46,14 @@ metadata = dict(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities',
     ],
+    packages=find_packages(exclude=('tests',)),
     include_package_data=True,
     package_data={
         '': ['LICENSE.txt', 'README.rst']
     },
     entry_points={'tests': ['default = runtests.main']},
+    install_requires=(
+        'Django>=1.4',
+    ),
     extras_require={'tests': ('djinga',)},
 )
-
-
-# packages parsing from root packages, without importing sub-packages
-root_path = os.path.dirname(__file__)
-if isinstance(INC_PACKAGES, basestring):
-    INC_PACKAGES = (INC_PACKAGES,)
-
-packages = []
-excludes = list(EXC_PACKAGES)
-for pkg in INC_PACKAGES:
-    pkg_root = os.path.join(root_path, *pkg.split('.'))
-    for dirpath, dirs, files in os.walk(pkg_root):
-        rel_path = os.path.relpath(dirpath, pkg_root)
-        pkg_name = pkg
-        if (rel_path != '.'):
-            pkg_name += '.' + rel_path.replace(os.sep, '.')
-        for x in excludes:
-            if x in pkg_name:
-                continue
-        if '__init__.py' in files:
-            packages.append(pkg_name)
-        elif dirs:  # stops package parsing if no __init__.py file
-            excludes.append(pkg_name)
-
-
-def read(filename):
-    return open(os.path.join(root_path, filename)).read()
-
-setup(**dict(metadata,
-   packages=packages,
-   long_description=read('README.rst'),
-   install_requires=install_requires
-))
