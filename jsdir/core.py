@@ -1,6 +1,5 @@
 import os
 from collections import deque
-import threading
 
 
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -33,8 +32,7 @@ class JSDir(object):
 
         # determine if we should use the staticfiles_storage to determine
         # the file system paths or if we should use the staticfiles finders
-        self.use_finders = self.finders_usage.get(
-            threading.current_thread().ident, False)
+        self.use_finders = self.finders_usage.get(os.getpid(), False)
 
         # extract prefix (= subdir of static directory)
         prefix = getattr(settings, 'JSDIR_JSURL', 'js')
@@ -71,8 +69,8 @@ class JSDir(object):
     @classmethod
     def set_use_finders(cls, val=True):
         # enables or not the usage of the staticfiles finders for the current
-        # thread
-        cls.finders_usage[threading.current_thread().ident] = val
+        # process id (not thread)
+        cls.finders_usage[os.getpid()] = val
 
     def get_tags(self):
         if self.expand:
