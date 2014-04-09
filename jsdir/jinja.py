@@ -16,14 +16,33 @@ class JinjaTag(Extension):
     tags = set(['jsdir'])
 
     def parse(self, parser):
-        parser.stream.next()
+        stream = parser.stream
+        lineno = stream.next().lineno
         args = []
-        while parser.stream.current.type != 'block_end':
-            args.append(parser.parse_expression())
-        return nodes.Output([self.call_method('get_tags', args)])
+        kwargs = []
 
-    def get_tags(self, path):
-        return JSDir(path).get_tags()
+        while stream.current.type != 'block_end':
+
+            if stream.current.type == 'name' and \
+               stream.look().type == 'assign':
+                key = nodes.Const(stream.next().value)
+                stream.skip()
+                value = parser.parse_expression()
+                kwargs.append(nodes.Pair(key, value, lineno=value.lineno))
+            else:
+                args.append(parser.parse_expression())
+
+        return nodes.Output([
+            self.call_method('get_tags',
+                             args=[nodes.List(args), nodes.Dict(kwargs)])
+        ]).set_lineno(lineno)
+
+    def get_tags(self, args, kwargs):
+        try:
+            path = args[0]
+        except IndexError:
+            raise ValueError('jsdir tag must have at least one argument')
+        return JSDir(path, **kwargs).get_tags()
 
 
 ext = JinjaTag

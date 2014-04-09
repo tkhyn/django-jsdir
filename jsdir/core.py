@@ -24,7 +24,7 @@ class JSDir(object):
 
     finders_usage = {}
 
-    def __init__(self, path):
+    def __init__(self, path, expand=False, minify=True):
 
         is_absolute = path.startswith('/') or ':' in path.split('/')[0]
         if is_absolute:
@@ -53,7 +53,8 @@ class JSDir(object):
             self.abs_dir_path = staticfiles_storage.path(path)
             self.abs_jsd_path = staticfiles_storage.path(self.jsd_path)
 
-        self.expand = settings.DEBUG or self.use_finders
+        self.expand = expand or settings.DEBUG or self.use_finders
+        self.minify = not settings.DEBUG and expand and minify
 
     @classmethod
     def set_use_finders(cls, val=True):
@@ -139,5 +140,14 @@ class JSDir(object):
                 if os.path.isdir(full_p):
                     fifo.append(full_p)
                 elif x.endswith('.js'):
+                    minified = x.endswith('.min.js')
+                    if self.minify:
+                        # we are in expand + minified mode, look for minified
+                        # files only
+                        if not minified:
+                            continue
+                    elif minified:
+                        # we are in concat mode, ignore minified files
+                        continue
                     items.append(get_item(full_p))
         return items

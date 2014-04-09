@@ -36,8 +36,10 @@ class JSDirProdTests(JSDirTestCase):
              "var x3 = 'file3';"])
         bs.close()
 
-        self.assertEqual(generated.strip(),
-            '<script type="text/javascript" src="/static/js/big_script.dir.js"></script>'
+        self.assertListEqual(generated.strip().splitlines(),
+            ['<script type="text/javascript" src="/static/js/big_script.dir.js"></script>',
+             '<script type="text/javascript" src="/static/js/libs/lib1.min.js"></script>',
+             '<script type="text/javascript" src="/static/js/libs/lib2.min.js"></script>']
         )
 
     def test_expanded(self):
@@ -49,5 +51,7 @@ class JSDirProdTests(JSDirTestCase):
         self.assertListEqual(generated.strip().splitlines(),
             ['<script type="text/javascript" src="/static/js/big_script/01-file1.js"></script>',
              '<script type="text/javascript" src="/static/js/big_script/02-file2.js"></script>',
-             '<script type="text/javascript" src="/static/js/big_script/03-file3.js"></script>']
+             '<script type="text/javascript" src="/static/js/big_script/03-file3.js"></script>',
+             '<script type="text/javascript" src="/static/js/libs/lib1.js"></script>',
+             '<script type="text/javascript" src="/static/js/libs/lib2.js"></script>']
         )

@@ -2,6 +2,7 @@
 Runs the tests with the matching settings set
 """
 
+import sys
 import shutil
 from importlib import import_module
 
@@ -25,6 +26,6 @@ def run(settings_set):
     from django.test.simple import DjangoTestSuiteRunner
 
     test_runner = DjangoTestSuiteRunner(verbosity=1)
-    test_runner.run_tests(['tests', ])
+    test_runner.run_tests(['tests'] + sys.argv[1:])
 
     shutil.rmtree(settings.STATIC_ROOT)

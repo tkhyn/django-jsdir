@@ -3,6 +3,7 @@ django-jsdir
 
 |copyright| 2014 Thomas Khyn, MIT License
 
+
 About
 -----
 
@@ -82,12 +83,34 @@ files anymore.
    concatenated in the foo.js file.
 
 
+Force expand a directory
+------------------------
+
+Sometimes, you will prefer to import the javascript files from a directory
+without seeing them concatenated at all. It is the case if you have a 'lib'
+folder containing javascript librairies. In that situation, you may use the
+tag argument ``expand``::
+
+   {% jsdir 'lib/' expand=True %}
+
+In production (i.e. with ``DEBUG = False``), jsdir will look for minified
+versions of the scripts (files named *.min.js) and return corresponding HTML
+tags. If you don't want this behavior, you can use the tag argument
+``minified`` and set it to ``False``::
+
+   {% jsdir 'lib/' expand=True minified=False %}
+
+Remember that the order in which the HTML tags will appear in the document,
+and therefore the order in which the JS files will be loaded is still
+alphabetic.
+
+
 Compression
 -----------
 
 If you wish to have big_script.dir.js compressed, django-jsdir integrates
-without a fuss with django-compressor_. The script gets compressed like any
-other js file. Simply use::
+without a fuss with django-compressor_. In production, the script gets
+compressed like any other js file. Simply use::
 
     {% compress %}
         {% jsdir 'big_script' %}
