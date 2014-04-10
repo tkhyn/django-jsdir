@@ -56,4 +56,5 @@ setup(
         'Django>=1.4',
     ),
     extras_require={'tests': ('djinga',)},
+    zip_safe=True,
 )
