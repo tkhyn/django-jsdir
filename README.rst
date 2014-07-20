@@ -97,7 +97,7 @@ tag argument ``expand``::
    {% jsdir 'lib/' expand=True %}
 
 In production (i.e. with ``DEBUG = False``), jsdir will look for minified
-versions of the scripts (files named *.min.js) and return corresponding HTML
+versions of the scripts (files named \*.min.js) and return corresponding HTML
 tags. If you don't want this behavior, you can use the tag argument
 ``minified`` and set it to ``False``::
 

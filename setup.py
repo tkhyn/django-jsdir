@@ -30,7 +30,7 @@ setup(
     long_description=open(os.path.join('README.rst')).read(),
     author='Thomas Khyn',
     author_email='thomas@ksytek.com',
-    url='http://bitbucket.org/tkhyn/django-jsdir/',
+    url='https://bitbucket.org/tkhyn/django-jsdir/',
     keywords=['js', 'javascript', 'directory', 'concatenate'],
     classifiers=[
         'Programming Language :: Python',
