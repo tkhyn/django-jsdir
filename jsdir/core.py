@@ -52,8 +52,8 @@ class JSDir(object):
 
         self.expand = expand or settings.DEBUG or self.use_finders
         if self.expand:
-            self.minify = not settings.DEBUG and expand and \
-                          kwargs.get('minify', True)
+            self.minify = not settings.DEBUG and not self.use_finders and \
+                          expand and kwargs.get('minify', True)
             firsts = kwargs.get('first', '').split(';')
             self.first = [x.strip() for x in firsts if x]
             lasts = kwargs.get('last', '').split(';')
