@@ -1,30 +1,15 @@
 syntax: glob
 
 # buildout files and folders
-buildout
+bin
 .installed.cfg
 
 # distutils generated files and folders
+build
 django_jsdir.egg-info
 dist
 MANIFEST
 
-# egg folder (when package is used as a buildout dev egg)
-django-jsdir.egg-info
-
-# eclipse project related files and folders
-.pydevproject
-.project
-.settings
-
-# python binary files
+# python binaries
+__pycache__
 *.pyc
-
-# locale binary files
-*.mo
-
-# log files
-*.log
-
-# Windows thumbnails
-**/thumbs.db
