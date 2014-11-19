@@ -6,7 +6,7 @@ import os
 
 from django.conf import settings
 
-from _base import JSDirTestCase, with_template_engines
+from ._base import JSDirTestCase, with_template_engines
 
 
 @with_template_engines('Django', 'Jinja2')

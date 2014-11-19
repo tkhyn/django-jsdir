@@ -2,10 +2,12 @@
 Jinja2 extension to provide a {% jsdir %} tag
 """
 
+from django.utils import six
+
 from jinja2 import nodes
 from jinja2.ext import Extension
 
-from core import JSDir
+from .core import JSDir
 
 
 class JinjaTag(Extension):
@@ -17,7 +19,7 @@ class JinjaTag(Extension):
 
     def parse(self, parser):
         stream = parser.stream
-        lineno = stream.next().lineno
+        lineno = six.next(stream).lineno
         args = []
         kwargs = []
 
@@ -25,7 +27,7 @@ class JinjaTag(Extension):
 
             if stream.current.type == 'name' and \
                stream.look().type == 'assign':
-                key = nodes.Const(stream.next().value)
+                key = nodes.Const(six.next(stream).value)
                 stream.skip()
                 value = parser.parse_expression()
                 kwargs.append(nodes.Pair(key, value, lineno=value.lineno))
