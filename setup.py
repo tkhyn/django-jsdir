@@ -19,7 +19,7 @@ if dev_status == 'alpha' and not __version_info__[4]:
 DEV_STATUS = {'pre': '2 - Pre-Alpha',
               'alpha': '3 - Alpha',
               'beta': '4 - Beta',
-              'rc': '5 - Production/Stable',
+              'rc': '4 - Beta',
               'final': '5 - Production/Stable'}
 
 # setup function parameters
@@ -55,6 +55,5 @@ setup(
     install_requires=(
         'Django>=1.4',
     ),
-    extras_require={'tests': ('djinga',)},
     zip_safe=True,
 )
