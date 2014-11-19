@@ -13,3 +13,6 @@ MANIFEST
 # python binaries
 __pycache__
 *.pyc
+
+# tox
+.tox
