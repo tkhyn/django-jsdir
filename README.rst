@@ -18,13 +18,17 @@ single standalone js file in your template in development.
 django-jsdir aims at solving this issue by providing a way to automatically
 link the js files in a directory tree with a single template tag.
 
+django-jsdir works with django 1.6 and 1.7, from python 2.6 to 3.4.
+
 
 Setup
 -----
 
-1. Install using your prefered method
-2. Add ``'jsdir'`` to your INSTALLED_APPS `after`
-   ``'django.contrib.staticfiles'``
+1. Install using your prefered method, e.g ``pip install django-jsdir``
+2. You will need both ``'jsdir'`` and ``'django.contrib.staticfiles'`` in your
+   ``INSTALLED_APPS``. If you are using Django 1.6, make sure that ``'jsdir'``
+   is placed `after` ``'django.contrib.staticfiles'``. If you are using Django
+   1.7, ``'jsdir'`` must be placed `before` ``'django.contrib.staticfiles'``.
 3. If you are using Jinja2, add ``'jsdir.jinja.ext'`` to your Jinja2
    extensions list
 
