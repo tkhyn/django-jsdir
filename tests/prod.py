@@ -2,18 +2,18 @@ import os
 import shutil
 
 from django.conf import settings
-from django.template.loader import render_to_string
 
-from base import JSDirTestCase
+from _base import JSDirTestCase, with_template_engines
 
 
+@with_template_engines('Django', 'Jinja2')
 class JSDirProdTests(JSDirTestCase):
 
     use_finders = False
 
     def setUp(self):
         super(JSDirProdTests, self).setUp()
-        app_static = os.path.join(os.path.dirname(__file__), 'static')
+        app_static = os.path.join(os.path.dirname(__file__), 'app', 'static')
         shutil.copytree(os.path.join(app_static, 'js'),
                         os.path.join(settings.STATIC_ROOT, 'js'))
 
@@ -22,8 +22,7 @@ class JSDirProdTests(JSDirTestCase):
         shutil.rmtree(os.path.join(settings.STATIC_ROOT, 'js'))
 
     def test_concat(self):
-        generated = render_to_string('jsdir.%shtml' % \
-            ('dj' if settings.SET == 'django' else 'jj'), {})
+        generated = self.render_to_string()
 
         js_dir = os.path.join(settings.STATIC_ROOT, 'js')
         self.assertTrue(os.path.isfile(os.path.join(js_dir,
@@ -46,8 +45,7 @@ class JSDirProdTests(JSDirTestCase):
     def test_expanded(self):
         # in debug mode, the JS Dir is expected to be expanded
         self.set_debug(True)
-        generated = render_to_string('jsdir.%shtml' % \
-            ('dj' if settings.SET == 'django' else 'jj'), {})
+        generated = self.render_to_string()
 
         js_dir = os.path.join(settings.STATIC_ROOT, 'js')
         self.assertFalse(os.path.exists(os.path.join(js_dir, 'libs.js')))
