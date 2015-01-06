@@ -53,6 +53,8 @@ class JSDir(object):
             self.abs_jsd_path = staticfiles_storage.path(self.jsd_path)
 
         self.expand = expand or settings.DEBUG or self.use_finders
+        self.exclude = [re.compile(fnmatch.translate(x.strip()))
+                        for x in kwargs.pop('exclude', '').split(';') if x]
         if self.expand:
             self.minify = not settings.DEBUG and expand and \
                           kwargs.get('minify', True)
@@ -142,9 +144,9 @@ class JSDir(object):
         :returns: the list of parsed files
         """
 
-        firsts = [[] for x in self.first]
+        firsts = [[]] * len(self.first)
         middle = []
-        lasts = [[] for x in self.last]
+        lasts = [[]] * len(self.last)
 
         def append_item(path):
             item = get_item(path)
@@ -154,6 +156,12 @@ class JSDir(object):
                                 split_path[-1].replace('.min', ''))
             if sys.platform == 'win32':
                 path = path.replace('\\', '/')
+
+            # first look in excluded patterns
+            for x in self.exclude:
+                if x.match(path):
+                    return
+
             # look in firsts
             for i, x in enumerate(self.first):
                 if x.match(path):

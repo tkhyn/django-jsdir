@@ -7,6 +7,7 @@ v0.2a (dev)
 
 - `first` and `last` keywords now use Unix-like patterns instead of plain names
 - `jsdir.jinja.ext` is now available under `jsdir.jinja2.ext`
+- adds `exclude` keyword support
 
 v0.1.3 (19-11-2014)
 -------------------

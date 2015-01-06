@@ -112,6 +112,14 @@ and therefore the order in which the JS files will be loaded is still
 alphabetic. You can however ask django-jsdir to load certain files first or
 last.
 
+If subdirectories or files in subdirectories must be excluded from the lookup,
+you may use the ``exclude`` keyword, which uses Unix-like patterns (see
+fnmatch_). The following line will exclude all the files in lib and its
+subdirectories that ends with ``'-to_exclude.js'``::
+
+   {% jsdir 'lib' exclude='*-to_exclude.js' %}
+
+
 ``first`` and ``last`` keywords
 +++++++++++++++++++++++++++++++
 

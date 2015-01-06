@@ -88,7 +88,7 @@ class JSDirTestCase(TestCase):
     def set_use_finders(self, value):
         JSDir.set_use_finders(value)
 
-    def render_to_string(self, template_name='jsdir', context=None):
+    def render_to_string(self, template_name, context=None):
         if context is None:
             context = {}
         return loader.render_to_string('%s.%s' % (template_name, self.ext),
