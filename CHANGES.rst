@@ -5,7 +5,7 @@ django-jsdir - changes
 v0.2a (dev)
 -----------
 
-- `first` and `last` keywords now use regexes
+- `first` and `last` keywords now use Unix-like patterns instead of plain names
 - `jsdir.jinja.ext` is now available under `jsdir.jinja2.ext`
 
 v0.1.3 (19-11-2014)

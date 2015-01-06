@@ -122,7 +122,7 @@ Use them like that::
 
    {% jsdir 'lib' expand=True first='1st_pattern; 2nd_pattern' last='verylast_parttern; 2ndtolast_pattern' %}
 
-Any file which name matches the regex pattern '1st_pattern' will be loaded
+Any file which name matches the glob pattern '1st_pattern' will be loaded
 before any file which name matches '2nd_pattern', which will be loaded before
 any other file, which will be loaded before any file which name matches
 '2ndtolast_pattern', which will be loaded before any file which name matches
@@ -130,7 +130,8 @@ any other file, which will be loaded before any file which name matches
 
 Note that:
 
-- you should use semicolons to separate the patterns
+- the patterns are Unix-like. See fnmatch_.
+- patterns should be separated by semicolons
 - spaces are stripped from the beginning and the end of each pattern
 - 'file.js' matches 'file.js' `and` 'file.min.js'
 
@@ -159,3 +160,4 @@ JSDIR_JSURL
 
 .. |copyright| unicode:: 0xA9
 .. _django-compressor: http://django-compressor.readthedocs.org/en/latest/
+.. _fnmatch: https://docs.python.org/2/library/fnmatch.html

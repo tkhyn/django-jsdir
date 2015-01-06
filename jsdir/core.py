@@ -1,5 +1,7 @@
 import os
+import sys
 import re
+import fnmatch
 
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.contrib.staticfiles.finders import find
@@ -54,9 +56,9 @@ class JSDir(object):
         if self.expand:
             self.minify = not settings.DEBUG and expand and \
                           kwargs.get('minify', True)
-            self.first = [x.strip()
+            self.first = [re.compile(fnmatch.translate(x.strip()))
                           for x in kwargs.get('first', '').split(';') if x]
-            self.last = [x.strip()
+            self.last = [re.compile(fnmatch.translate(x.strip()))
                          for x in kwargs.get('last', '').split(';') if x]
         else:
             # there should not be any more kwargs if expand is False
@@ -145,16 +147,21 @@ class JSDir(object):
         lasts = [[] for x in self.last]
 
         def append_item(path):
-            name = os.path.split(path)[-1].replace('.min', '')
             item = get_item(path)
+            split_path = os.path.split(path)
+            path = os.path.join(os.path.relpath(split_path[0],
+                                                self.abs_dir_path)[2:],
+                                split_path[-1].replace('.min', ''))
+            if sys.platform == 'win32':
+                path = path.replace('\\', '/')
             # look in firsts
             for i, x in enumerate(self.first):
-                if re.match(x, name):
+                if x.match(path):
                     firsts[i].append(item)
                     return
             # look in lasts
             for i, x in enumerate(self.last):
-                if re.match(x, name):
+                if x.match(path):
                     lasts[i].append(item)
                     return
             # not found, append in the middle
