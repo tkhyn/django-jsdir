@@ -152,10 +152,11 @@ class JSDir(object):
             item = get_item(path)
             split_path = os.path.split(path)
             path = os.path.join(os.path.relpath(split_path[0],
-                                                self.abs_dir_path)[2:],
+                                                self.abs_dir_path),
                                 split_path[-1].replace('.min', ''))
             if sys.platform == 'win32':
                 path = path.replace('\\', '/')
+            path = path.lstrip('./')
 
             # first look in excluded patterns
             for x in self.exclude:
