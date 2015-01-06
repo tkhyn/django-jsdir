@@ -144,9 +144,9 @@ class JSDir(object):
         :returns: the list of parsed files
         """
 
-        firsts = [[]] * len(self.first)
+        firsts = [[] for f in self.first]
         middle = []
-        lasts = [[]] * len(self.last)
+        lasts = [[] for l in self.last]
 
         def append_item(path):
             item = get_item(path)
