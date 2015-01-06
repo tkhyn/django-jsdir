@@ -46,11 +46,7 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities',
     ],
-    packages=find_packages(exclude=('tests',)),
-    include_package_data=True,
-    package_data={
-        '': ['LICENSE.txt', 'README.rst']
-    },
+    packages=find_packages(),
     entry_points={'tests': ['default = runtests.main']},
     install_requires=(
         'Django>=1.4',
