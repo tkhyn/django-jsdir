@@ -33,5 +33,5 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 # only used for jinja tests
 JINJA2_EXTENSIONS = (
-    'jsdir.jinja.ext',
+    'jsdir.jinja2.ext',
 )

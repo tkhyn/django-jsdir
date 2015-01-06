@@ -29,7 +29,7 @@ Setup
    ``INSTALLED_APPS``. If you are using Django 1.6, make sure that ``'jsdir'``
    is placed `after` ``'django.contrib.staticfiles'``. If you are using Django
    1.7, ``'jsdir'`` must be placed `before` ``'django.contrib.staticfiles'``.
-3. If you are using Jinja2, add ``'jsdir.jinja.ext'`` to your Jinja2
+3. If you are using Jinja2, add ``'jsdir.jinja2.ext'`` to your Jinja2
    extensions list
 
 

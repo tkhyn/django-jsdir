@@ -2,6 +2,8 @@
 Jinja2 extension to provide a {% jsdir %} tag
 """
 
+from __future__ import absolute_import
+
 from django.utils import six
 
 from jinja2 import nodes
