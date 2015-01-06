@@ -120,18 +120,18 @@ django-jsdir provides the ``first`` and ``last`` keywords.
 
 Use them like that::
 
-   {% jsdir 'lib' expand=True first='1st; 2nd' last='verylast; 2ndtolast' %}
+   {% jsdir 'lib' expand=True first='1st_pattern; 2nd_pattern' last='verylast_parttern; 2ndtolast_pattern' %}
 
-Any file which name contains '1st' will be loaded before any file which name
-contains '2nd', which will be loaded before any other file, which will be
-loaded before any file which name contains '2ndtolast', which will be loaded
-before any file which name contains 'verylast'.
+Any file which name matches the regex pattern '1st_pattern' will be loaded
+before any file which name matches '2nd_pattern', which will be loaded before
+any other file, which will be loaded before any file which name matches
+'2ndtolast_pattern', which will be loaded before any file which name matches
+'verylast_pattern'.
 
 Note that:
 
-- the lookup is case-sensitive, even on Windows platforms
-- you should use semicolons to separate the names
-- spaces are stripped from the beginning and the end of each name
+- you should use semicolons to separate the patterns
+- spaces are stripped from the beginning and the end of each pattern
 - 'file.js' matches 'file.js' `and` 'file.min.js'
 
 .. warning::

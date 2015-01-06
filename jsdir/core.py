@@ -1,5 +1,5 @@
 import os
-
+import re
 
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.contrib.staticfiles.finders import find
@@ -54,10 +54,10 @@ class JSDir(object):
         if self.expand:
             self.minify = not settings.DEBUG and expand and \
                           kwargs.get('minify', True)
-            firsts = kwargs.get('first', '').split(';')
-            self.first = [x.strip() for x in firsts if x]
-            lasts = kwargs.get('last', '').split(';')
-            self.last = [x.strip() for x in lasts if x]
+            self.first = [x.strip()
+                          for x in kwargs.get('first', '').split(';') if x]
+            self.last = [x.strip()
+                         for x in kwargs.get('last', '').split(';') if x]
         else:
             # there should not be any more kwargs if expand is False
             assert not kwargs
@@ -149,12 +149,12 @@ class JSDir(object):
             item = get_item(path)
             # look in firsts
             for i, x in enumerate(self.first):
-                if x in name:
+                if re.match(x, name):
                     firsts[i].append(item)
                     return
             # look in lasts
             for i, x in enumerate(self.last):
-                if x in name:
+                if re.match(x, name):
                     lasts[i].append(item)
                     return
             # not found, append in the middle
