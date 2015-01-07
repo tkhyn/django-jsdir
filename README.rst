@@ -1,7 +1,7 @@
 django-jsdir
 ============
 
-|copyright| 2014 Thomas Khyn, MIT License
+|copyright| 2014-2015 Thomas Khyn, MIT License
 
 
 About

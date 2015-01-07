@@ -1,7 +1,7 @@
 """
 django-jsdir
 Eases the management of JS files in a django app
-(c) 2014 Thomas Khyn
+(c) 2014-2015 Thomas Khyn
 MIT license (see LICENSE.txt)
 """
 
@@ -47,9 +47,8 @@ setup(
         'Topic :: Utilities',
     ],
     packages=find_packages(),
-    entry_points={'tests': ['default = runtests.main']},
     install_requires=(
-        'Django>=1.4',
+        'Django>=1.6',
     ),
     zip_safe=True,
 )
