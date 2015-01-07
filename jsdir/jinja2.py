@@ -2,6 +2,8 @@
 Jinja2 extension to provide a {% jsdir %} tag
 """
 
+from __future__ import absolute_import
+
 from django.utils import six
 
 from jinja2 import nodes
@@ -32,6 +34,12 @@ class JinjaTag(Extension):
                 value = parser.parse_expression()
                 kwargs.append(nodes.Pair(key, value, lineno=value.lineno))
             else:
+                if args:
+                    parser.fail('jsdir tag takes only one non-keyword '
+                                'argument')
+                if kwargs:
+                    parser.fail('Args cannot be provided after kwargs',
+                                parser.stream.current.lineno)
                 args.append(parser.parse_expression())
 
         return nodes.Output([
@@ -43,7 +51,10 @@ class JinjaTag(Extension):
         try:
             path = args[0]
         except IndexError:
-            raise ValueError('jsdir tag must have at least one argument')
+            try:
+                path = kwargs.pop('path')
+            except KeyError:
+                raise ValueError('jsdir tag must have at least one argument')
         return JSDir(path, **kwargs).get_tags()
 
 

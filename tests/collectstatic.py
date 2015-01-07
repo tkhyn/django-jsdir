@@ -36,7 +36,7 @@ class CollectStaticTests(JSDirTestCase):
         # DEBUG and JSDir.use_finder[this thread] are False by default
 
         # this should generate the big_script.dir.js file
-        self.render_to_string()
+        self.render_to_string('jsdir')
 
         js_dir = os.path.join(settings.STATIC_ROOT, 'js')
 

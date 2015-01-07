@@ -18,7 +18,7 @@ class JSDirRunserverTests(JSDirTestCase):
 
     def test_expanded_runserver(self):
 
-        generated = self.render_to_string()
+        generated = self.render_to_string('jsdir')
 
         js_dir = os.path.join(settings.STATIC_ROOT, 'js')
         self.assertFalse(os.path.exists(os.path.join(js_dir,
@@ -43,7 +43,7 @@ class JSDirRunserverTests(JSDirTestCase):
 
         self.set_debug(True)
 
-        generated = self.render_to_string()
+        generated = self.render_to_string('jsdir')
 
         js_dir = os.path.join(settings.STATIC_ROOT, 'js')
         self.assertFalse(os.path.exists(os.path.join(js_dir,

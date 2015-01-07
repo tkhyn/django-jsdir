@@ -1,7 +1,7 @@
 django-jsdir
 ============
 
-|copyright| 2014 Thomas Khyn, MIT License
+|copyright| 2014-2015 Thomas Khyn, MIT License
 
 
 About
@@ -29,7 +29,7 @@ Setup
    ``INSTALLED_APPS``. If you are using Django 1.6, make sure that ``'jsdir'``
    is placed `after` ``'django.contrib.staticfiles'``. If you are using Django
    1.7, ``'jsdir'`` must be placed `before` ``'django.contrib.staticfiles'``.
-3. If you are using Jinja2, add ``'jsdir.jinja.ext'`` to your Jinja2
+3. If you are using Jinja2, add ``'jsdir.jinja2.ext'`` to your Jinja2
    extensions list
 
 
@@ -112,6 +112,14 @@ and therefore the order in which the JS files will be loaded is still
 alphabetic. You can however ask django-jsdir to load certain files first or
 last.
 
+If subdirectories or files in subdirectories must be excluded from the lookup,
+you may use the ``exclude`` keyword, which uses Unix-like patterns (see
+fnmatch_). The following line will exclude all the files in lib and its
+subdirectories that ends with ``'-to_exclude.js'``::
+
+   {% jsdir 'lib' exclude='*-to_exclude.js' %}
+
+
 ``first`` and ``last`` keywords
 +++++++++++++++++++++++++++++++
 
@@ -120,18 +128,19 @@ django-jsdir provides the ``first`` and ``last`` keywords.
 
 Use them like that::
 
-   {% jsdir 'lib' expand=True first='1st; 2nd' last='verylast; 2ndtolast' %}
+   {% jsdir 'lib' expand=True first='1st_pattern; 2nd_pattern' last='verylast_parttern; 2ndtolast_pattern' %}
 
-Any file which name contains '1st' will be loaded before any file which name
-contains '2nd', which will be loaded before any other file, which will be
-loaded before any file which name contains '2ndtolast', which will be loaded
-before any file which name contains 'verylast'.
+Any file which name matches the glob pattern '1st_pattern' will be loaded
+before any file which name matches '2nd_pattern', which will be loaded before
+any other file, which will be loaded before any file which name matches
+'2ndtolast_pattern', which will be loaded before any file which name matches
+'verylast_pattern'.
 
 Note that:
 
-- the lookup is case-sensitive, even on Windows platforms
-- you should use semicolons to separate the names
-- spaces are stripped from the beginning and the end of each name
+- the patterns are Unix-like. See fnmatch_.
+- patterns should be separated by semicolons
+- spaces are stripped from the beginning and the end of each pattern
 - 'file.js' matches 'file.js' `and` 'file.min.js'
 
 .. warning::
@@ -159,3 +168,4 @@ JSDIR_JSURL
 
 .. |copyright| unicode:: 0xA9
 .. _django-compressor: http://django-compressor.readthedocs.org/en/latest/
+.. _fnmatch: https://docs.python.org/2/library/fnmatch.html

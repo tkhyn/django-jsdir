@@ -1,0 +1,1 @@
+{% jsdir 'libs' exclude='lib1.js' %}

@@ -1,3 +1,3 @@
 {% load jsdir %}
 {% jsdir 'big_script' %}
-{% jsdir 'libs' expand=True first='lib2' %}
+{% jsdir 'libs' expand=True first='lib2.js' %}
