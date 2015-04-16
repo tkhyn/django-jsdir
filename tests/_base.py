@@ -67,7 +67,11 @@ class JSDirTestCase(TestCase):
     def setUpClass(cls):
         if not os.path.exists(settings.STATIC_ROOT):
             os.mkdir(settings.STATIC_ROOT)
-        engines._engines = {}
+        try:
+            engines._engines = {}
+        except AttributeError:
+            # django < 1.7
+            pass
 
     @classmethod
     def tearDownClass(cls):
@@ -92,4 +96,9 @@ class JSDirTestCase(TestCase):
         if context is None:
             context = {}
         tmpl = get_template('%s.%s' % (template_name, self.ext))
-        return tmpl.render(context)
+        try:
+            return tmpl.render(context)
+        except AttributeError:
+            # django < 1.7
+            from django.template import Context
+            return tmpl.render(Context(context))
