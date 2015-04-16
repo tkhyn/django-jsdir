@@ -9,9 +9,14 @@ from jsdir.core import JSDir, jsdir_ext
 
 class Command(StaticFilesCommand):
 
-    def handle_noargs(self, **options):
+    def handle(self, *args, **options):
         self.jsdirs = []
-        super(Command, self).handle_noargs(**options)
+
+        try:
+            # django < 1.8
+            super(Command, self).handle_noargs(**options)
+        except AttributeError:
+            super(Command, self).handle(**options)
 
         js_dir = os.path.join(settings.STATIC_ROOT,
                               getattr(settings, 'JSDIR_JSURL', 'js'))
@@ -26,3 +31,7 @@ class Command(StaticFilesCommand):
 
         # the directories for which no .dir.js file is generated will be
         # processed during the first request through the {% jsdir %} tag
+
+    def handle_noargs(self, **options):
+        # for django < 1.8
+        self.handle(**options)
