@@ -30,8 +30,3 @@ STATIC_URL = '/static/'
 STATIC_ROOT = tempfile.mkdtemp('_jsdir')
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
-# only used for jinja tests
-JINJA2_EXTENSIONS = (
-    'jsdir.jinja2.ext',
-)

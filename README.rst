@@ -18,7 +18,7 @@ single standalone js file in your template in development.
 django-jsdir aims at solving this issue by providing a way to automatically
 link the js files in a directory tree with a single template tag.
 
-django-jsdir works with django 1.6 and 1.7, from python 2.6 to 3.4.
+django-jsdir works with django 1.6 to 1.8, from python 2.6 to 3.4.
 
 
 Setup

@@ -9,6 +9,9 @@ v0.2 (07-01-2015)
 - `jsdir.jinja.ext` is now available under `jsdir.jinja2.ext`
 - adds `exclude` keyword support
 
+v0.2.1 (16-04-2015)
+...................
+- Django 1.8 support
 
 
 0.1 (09-04-2014) - beta

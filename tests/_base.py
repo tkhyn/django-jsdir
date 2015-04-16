@@ -9,20 +9,20 @@ import shutil
 from django.test import TestCase
 from django.test.utils import override_settings
 from django.conf import settings
-from django.template import loader
+from django.template.loader import get_template
+
+from djinga.engines import engines
 
 from jsdir.core import JSDir
 
+from ._compat import JINJA_TEMPLATE_SETTINGS
 
 __test__ = False
 
 
 TEMPLATE_ENGINE_SETTINGS = {
     'Django': ('djhtml', None),
-    'Jinja2': ('jjhtml', dict(TEMPLATE_LOADERS=(
-        'djinga.loaders.FileSystemLoader',
-        'djinga.loaders.AppLoader',
-    )))
+    'Jinja2': ('jjhtml', JINJA_TEMPLATE_SETTINGS)
 }
 
 
@@ -48,7 +48,7 @@ def with_template_engines(*args):
                 te_class = override_settings(**te_settings)(type(new_name,
                                                                  (cls,), {}))
                 setattr(module, new_name, te_class)
-                te_class.ext = TEMPLATE_ENGINE_SETTINGS[te][0]
+                te_class.engine = TEMPLATE_ENGINE_SETTINGS[te][0]
 
         return cls
 
@@ -67,7 +67,11 @@ class JSDirTestCase(TestCase):
     def setUpClass(cls):
         if not os.path.exists(settings.STATIC_ROOT):
             os.mkdir(settings.STATIC_ROOT)
-#        loader.template_source_loaders = None
+        try:
+            engines._engines = {}
+        except AttributeError:
+            # django < 1.7
+            pass
 
     @classmethod
     def tearDownClass(cls):
@@ -91,5 +95,10 @@ class JSDirTestCase(TestCase):
     def render_to_string(self, template_name, context=None):
         if context is None:
             context = {}
-        return loader.render_to_string('%s.%s' % (template_name, self.ext),
-                                       context or {})
+        tmpl = get_template('%s.%s' % (template_name, self.ext))
+        try:
+            return tmpl.render(context)
+        except AttributeError:
+            # django < 1.7
+            from django.template import Context
+            return tmpl.render(Context(context))
