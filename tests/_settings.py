@@ -1,5 +1,8 @@
 import tempfile
 
+import django
+
+
 DEBUG = True
 SECRET_KEY = 'secret'
 
@@ -17,7 +20,7 @@ INSTALLED_APPS = (
     'tests.app',
 )
 
-import django
+
 if django.VERSION < (1, 7):
     INSTALLED_APPS += ('jsdir',)
 else:

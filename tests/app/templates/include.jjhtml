@@ -1,0 +1,1 @@
+{% jsdir 'libs' include='lib1.js' %}

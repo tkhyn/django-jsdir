@@ -89,3 +89,34 @@ class JSDirProdTests(JSDirTestCase):
         self.assertListEqual(generated.strip().splitlines(),
             ['<script type="text/javascript" src="/static/js/libs/lib2.js"></script>']
         )
+
+    def test_include_concat(self):
+        # setting debug mode to False so that the directory is concatenated
+        self.set_debug(False)
+        generated = self.render_to_string('include')
+
+        js_dir = os.path.join(settings.STATIC_ROOT, 'js')
+        libs_dir_js = os.path.join(js_dir, 'libs.dir.js')
+        self.assertTrue(os.path.exists(libs_dir_js))
+
+        lib_dir = open(libs_dir_js, 'r')
+        lib_dir_ctnt = lib_dir.read().splitlines()
+        lib_dir.close()
+        self.assertListEqual(lib_dir_ctnt,
+            ["var lib1 = 'lib1';"])
+
+        self.assertListEqual(generated.strip().splitlines(),
+            ['<script type="text/javascript" src="/static/js/libs.dir.js"></script>']
+        )
+
+    def test_include_debug(self):
+        # setting debug mode to True so that the directory is expanded
+        self.set_debug(True)
+        generated = self.render_to_string('include')
+
+        js_dir = os.path.join(settings.STATIC_ROOT, 'js')
+        self.assertFalse(os.path.exists(os.path.join(js_dir, 'libs.js')))
+
+        self.assertListEqual(generated.strip().splitlines(),
+            ['<script type="text/javascript" src="/static/js/libs/lib1.js"></script>']
+        )

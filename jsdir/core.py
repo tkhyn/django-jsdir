@@ -53,8 +53,15 @@ class JSDir(object):
             self.abs_jsd_path = staticfiles_storage.path(self.jsd_path)
 
         self.expand = expand or settings.DEBUG or self.use_finders
-        self.exclude = [re.compile(fnmatch.translate(x.strip()))
-                        for x in kwargs.pop('exclude', '').split(';') if x]
+
+        self.include =[]
+        self.exclude = []
+        for attr in ('include', 'exclude'):
+            for x in kwargs.pop(attr, '').split(';'):
+                if x:
+                    getattr(self, attr).append(
+                        re.compile(fnmatch.translate(x.strip())))
+
         if self.expand:
             self.minify = not settings.DEBUG and expand and \
                           kwargs.get('minify', True)
@@ -145,6 +152,7 @@ class JSDir(object):
         """
 
         firsts = [[] for f in self.first]
+        included = [[] for f in self.include]
         middle = []
         lasts = [[] for l in self.last]
 
@@ -158,7 +166,18 @@ class JSDir(object):
                 path = path.replace('\\', '/')
             path = path.lstrip('./')
 
-            # first look in excluded patterns
+            # first look in included patterns, reject anything that does not
+            # match
+            include_index = None
+            for i, x in enumerate(self.include):
+                if x.match(path):
+                    include_index = i
+                    break
+            else:
+                if self.include:
+                    # rejected file
+                    return
+
             for x in self.exclude:
                 if x.match(path):
                     return
@@ -173,8 +192,11 @@ class JSDir(object):
                 if x.match(path):
                     lasts[i].append(item)
                     return
-            # not found, append in the middle
-            middle.append(item)
+            # not found, append in the middle if include_index is not there
+            if include_index is not None:
+                included[include_index].append(item)
+            else:
+                middle.append(item)
 
         def walk(path):
             for x in sorted(os.listdir(path)):
@@ -198,7 +220,7 @@ class JSDir(object):
 
         # concatenates the lists
         result = []
-        for l in firsts:
+        for l in firsts + included:
             result.extend(l)
         result.extend(middle)
         for l in reversed(lasts):
