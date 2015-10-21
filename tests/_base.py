@@ -70,7 +70,7 @@ class JSDirTestCase(TestCase):
         try:
             engines._engines = {}
         except AttributeError:
-            # django < 1.7
+            # django <= 1.7
             pass
 
     @classmethod
@@ -99,6 +99,6 @@ class JSDirTestCase(TestCase):
         try:
             return tmpl.render(context)
         except AttributeError:
-            # django < 1.7
+            # django <= 1.7
             from django.template import Context
             return tmpl.render(Context(context))

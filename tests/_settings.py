@@ -1,7 +1,5 @@
 import tempfile
 
-import django
-
 
 DEBUG = True
 SECRET_KEY = 'secret'
@@ -14,18 +12,12 @@ DATABASES = {
 }
 
 INSTALLED_APPS = (
+    'jsdir',
     'django.contrib.staticfiles',
     'djinga',
     'django_nose',
     'tests.app',
 )
-
-
-if django.VERSION < (1, 7):
-    INSTALLED_APPS += ('jsdir',)
-else:
-    # django 1.7 reversed the management commands override priority order
-    INSTALLED_APPS = ('jsdir',) + INSTALLED_APPS
 
 MIDDLEWARE_CLASSES = ()
 
