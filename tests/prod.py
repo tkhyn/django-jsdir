@@ -106,7 +106,8 @@ class JSDirProdTests(JSDirTestCase):
             ["var lib1 = 'lib1';"])
 
         self.assertListEqual(generated.strip().splitlines(),
-            ['<script type="text/javascript" src="/static/js/libs.dir.js"></script>']
+            ['<script type="text/javascript" src="/static/js/libs.dir.js"></script>',
+             '<script type="text/javascript" src="/static/js/libs.lib2.dir.js"></script>']
         )
 
     def test_include_debug(self):
@@ -118,5 +119,6 @@ class JSDirProdTests(JSDirTestCase):
         self.assertFalse(os.path.exists(os.path.join(js_dir, 'libs.js')))
 
         self.assertListEqual(generated.strip().splitlines(),
-            ['<script type="text/javascript" src="/static/js/libs/lib1.js"></script>']
+            ['<script type="text/javascript" src="/static/js/libs/lib1.js"></script>',
+             '<script type="text/javascript" src="/static/js/libs/lib2.js"></script>']
         )

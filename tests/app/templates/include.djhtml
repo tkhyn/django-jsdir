@@ -1,2 +1,3 @@
 {% load jsdir %}
 {% jsdir 'libs' include='lib1.js' %}
+{% jsdir 'libs' name='lib2' include='lib2.js' %}

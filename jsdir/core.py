@@ -9,7 +9,7 @@ from django.conf import settings
 
 
 js_tag = '<script type="text/javascript" src="%s"></script>'
-jsdir_ext = '.dir.js'
+jsdir_ext = 'dir.js'
 
 
 class JSDir(object):
@@ -40,10 +40,16 @@ class JSDir(object):
         if prefix:
             path = '%s/%s' % (prefix, path)
 
+        # extract name if any
+        name = kwargs.pop('name', None)
+
         # rel path of the directory % static root
         self.dir_path = path
         # rel path of the generated file % static root
-        self.jsd_path = path + jsdir_ext
+        self.jsd_ext = jsdir_ext
+        if name is not None:
+            self.jsd_ext = '.'.join((name, jsdir_ext))
+        self.jsd_path = '.'.join((path, self.jsd_ext))
 
         if self.use_finders:
             self.abs_dir_path = find(path)
@@ -128,14 +134,15 @@ class JSDir(object):
         """
         def get_item(path):
             f = open(path, 'r')
-            return f.read()
+            read = f.read()
             f.close()
+            return read
 
         big_script = self._walk(get_item)
 
         out_path = self.abs_jsd_path
         if not out_path:
-            out_path = self.abs_dir_path + jsdir_ext
+            out_path = '.'.join((self.abs_dir_path, self.jsd_ext))
 
         out = open(out_path, 'w')
         out.write(''.join(big_script))

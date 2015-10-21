@@ -24,9 +24,9 @@ class Command(StaticFilesCommand):
         for dirpath, __, files in os.walk(js_dir):
             for f in files:
                 if f.endswith(jsdir_ext):
-                    dir_path = os.path.join(dirpath, f[:-len(jsdir_ext)]) \
-                                   .replace(js_dir, '') \
-                                   .replace('\\', '/').strip('/')
+                    dir_path = os.path.join(dirpath, f[:-len(jsdir_ext) - 1]) \
+                                      .replace(js_dir, '') \
+                                      .replace('\\', '/').strip('/')
                     JSDir(dir_path).concatenate()
 
         # the directories for which no .dir.js file is generated will be
