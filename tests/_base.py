@@ -5,13 +5,12 @@ Base test class
 import sys
 import os
 import shutil
+from copy import deepcopy
 
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.test.utils import override_settings
 from django.conf import settings
 from django.template.loader import get_template
-
-from djinga.engines import engines
 
 from jsdir.core import JSDir
 
@@ -37,7 +36,10 @@ def with_template_engines(*args):
         name = cls.__name__
         for te in args:
             try:
-                te_settings = TEMPLATE_ENGINE_SETTINGS[te][1]
+                # we need to deepcopy as the TEMPLATES['OPTIONS'] dictionnary
+                # gets tampered with at some point when the settings are
+                # overridden
+                te_settings = deepcopy(TEMPLATE_ENGINE_SETTINGS[te][1])
             except (KeyError, TypeError):
                 continue
 
@@ -48,7 +50,7 @@ def with_template_engines(*args):
                 te_class = override_settings(**te_settings)(type(new_name,
                                                                  (cls,), {}))
                 setattr(module, new_name, te_class)
-                te_class.engine = TEMPLATE_ENGINE_SETTINGS[te][0]
+                te_class.ext = TEMPLATE_ENGINE_SETTINGS[te][0]
 
         return cls
 
@@ -67,14 +69,11 @@ class JSDirTestCase(TestCase):
     def setUpClass(cls):
         if not os.path.exists(settings.STATIC_ROOT):
             os.mkdir(settings.STATIC_ROOT)
-        try:
-            engines._engines = {}
-        except AttributeError:
-            # django <= 1.7
-            pass
+        super(JSDirTestCase, cls).setUpClass()
 
     @classmethod
     def tearDownClass(cls):
+        super(JSDirTestCase, cls).tearDownClass()
         # cleanup
         shutil.rmtree(settings.STATIC_ROOT)
 

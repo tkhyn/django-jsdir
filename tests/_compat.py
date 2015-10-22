@@ -1,14 +1,19 @@
+import os
+
 import django
 
 
 if django.VERSION >= (1, 8):
     JINJA_TEMPLATE_SETTINGS = dict(
-        TEMPLATES=dict(
+        TEMPLATES=[dict(
             BACKEND='djinga.backends.djinga.DjingaTemplates',
+            DIRS=[os.path.join(os.path.dirname(__file__), 'app', 'templates')],
             OPTIONS=dict(
-                extensions='jsdir.jinja2.ext',
+                extensions=(
+                    'jsdir.jinja2.ext',
+                ),
             )
-        )
+        )]
     )
 else:
     # old-style template settings
