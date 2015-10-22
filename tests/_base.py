@@ -14,14 +14,22 @@ from django.template.loader import get_template
 
 from jsdir.core import JSDir
 
-from ._compat import JINJA_TEMPLATE_SETTINGS
-
 __test__ = False
 
 
 TEMPLATE_ENGINE_SETTINGS = {
     'Django': ('djhtml', None),
-    'Jinja2': ('jjhtml', JINJA_TEMPLATE_SETTINGS)
+    'Jinja2': ('jjhtml', dict(
+        TEMPLATES=[dict(
+            BACKEND='djinga.backends.djinga.DjingaTemplates',
+            DIRS=[os.path.join(os.path.dirname(__file__), 'app', 'templates')],
+            OPTIONS=dict(
+                extensions=(
+                    'jsdir.jinja2.ext',
+                ),
+            )
+        )]
+    ))
 }
 
 
@@ -95,9 +103,4 @@ class JSDirTestCase(TestCase):
         if context is None:
             context = {}
         tmpl = get_template('%s.%s' % (template_name, self.ext))
-        try:
-            return tmpl.render(context)
-        except AttributeError:
-            # django <= 1.7
-            from django.template import Context
-            return tmpl.render(Context(context))
+        return tmpl.render(context)
