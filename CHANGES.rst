@@ -7,6 +7,7 @@ v0.3 (dev)
 
 - adds `include` keyword support
 - adds `name` keyword support
+- iterables can be used in patterns lists
 - adds support for Django 1.9
 - drops support for Django < 1.8
 

@@ -110,6 +110,14 @@ Use them like that::
 This will load ``jquery.js`` and all the ``jquery-ui`` files except the effect
 files.
 
+The patterns:
+
+    - are Unix-like. See fnmatch_.
+    - should either be provided as a semicolon-separated string (spaces at the
+      beginning and at the end of each pattern are stripped) or, for ``jinja2``
+      templates, as a list or tuple
+    - 'file.js' will matche both 'file.js' `and` 'file.min.js'
+
 .. note::
 
     The ``include`` keyword as priority over the ``exclude`` one. When the
@@ -159,13 +167,6 @@ and therefore the order in which the JS files will be loaded is still
 alphabetic. You can however ask django-jsdir to load certain files first or
 last.
 
-If subdirectories or files in subdirectories must be excluded from the lookup,
-you may use the ``exclude`` keyword, which uses Unix-like patterns (see
-fnmatch_). The following line will exclude all the files in lib and its
-subdirectories that ends with ``'-to_exclude.js'``::
-
-   {% jsdir 'lib' exclude='*-to_exclude.js' %}
-
 
 ``first`` and ``last`` keywords
 +++++++++++++++++++++++++++++++
@@ -182,13 +183,6 @@ before any file which name matches '2nd_pattern', which will be loaded before
 any other file, which will be loaded before any file which name matches
 '2ndtolast_pattern', which will be loaded before any file which name matches
 'verylast_pattern'.
-
-Note that:
-
-- the patterns are Unix-like. See fnmatch_.
-- patterns should be separated by semicolons
-- spaces are stripped from the beginning and the end of each pattern
-- 'file.js' matches 'file.js' `and` 'file.min.js'
 
 .. warning::
    ``first`` and ``last`` keywords are only available when ``expand=True`` is

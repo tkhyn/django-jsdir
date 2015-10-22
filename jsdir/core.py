@@ -6,6 +6,7 @@ import fnmatch
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.contrib.staticfiles.finders import find
 from django.conf import settings
+from django.utils.six import string_types
 
 
 js_tag = '<script type="text/javascript" src="%s"></script>'
@@ -60,27 +61,24 @@ class JSDir(object):
 
         self.expand = expand or settings.DEBUG or self.use_finders
 
-        self.include =[]
+        self.include = []
         self.exclude = []
-        for attr in ('include', 'exclude'):
-            for x in kwargs.pop(attr, '').split(';'):
-                if x:
-                    getattr(self, attr).append(
-                        re.compile(fnmatch.translate(x.strip())))
-
+        self.first = []
+        self.last = []
+        attrs = ['include', 'exclude']
         if self.expand:
+            attrs.extend(['first', 'last'])
             self.minify = not settings.DEBUG and expand and \
                           kwargs.get('minify', True)
-            self.first = [re.compile(fnmatch.translate(x.strip()))
-                          for x in kwargs.get('first', '').split(';') if x]
-            self.last = [re.compile(fnmatch.translate(x.strip()))
-                         for x in kwargs.get('last', '').split(';') if x]
         else:
-            # there should not be any more kwargs if expand is False
-            assert not kwargs
             self.minify = False
-            self.first = []
-            self.last = []
+
+        for attr in attrs:
+            patterns = kwargs.pop(attr, [])
+            if isinstance(patterns, string_types):
+                patterns = [p.strip() for p in patterns.split(';') if p.strip()]
+            for p in patterns:
+                getattr(self, attr).append(re.compile(fnmatch.translate(p)))
 
     @classmethod
     def set_use_finders(cls, val=True):
