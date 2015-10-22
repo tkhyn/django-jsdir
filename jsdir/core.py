@@ -27,9 +27,8 @@ class JSDir(object):
 
     def __init__(self, path, expand=False, **kwargs):
 
-        is_absolute = path.startswith('/') or ':' in path.split('/')[0]
-        if is_absolute:
-            raise NotImplementedError('jsdir: absolute urls like %s are not '
+        if ':' in path.split('/')[0]:
+            raise NotImplementedError('jsdir: external urls like %s are not '
                                       'supported' % path)
 
         # determine if we should use the staticfiles_storage to determine
@@ -38,7 +37,11 @@ class JSDir(object):
 
         # extract prefix (= subdir of static directory)
         prefix = getattr(settings, 'JSDIR_JSURL', 'js')
-        if prefix:
+        if path.startswith('/'):
+            # absolute path, no prefix
+            path = path[1:]
+        elif prefix:
+            # add prefix if any
             path = '%s/%s' % (prefix, path)
 
         # extract name if any
