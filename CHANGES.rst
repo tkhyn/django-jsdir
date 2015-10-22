@@ -12,12 +12,22 @@ v0.3 (dev)
 - drops support for Django < 1.8
 
 
+v0.3 (22-10-2015)
+-----------------
+
+- adds ``include`` keyword support
+- adds ``name`` keyword support
+- iterables can be used in patterns lists
+- adds support for Django 1.9
+- drops support for Django < 1.8
+
+
 v0.2 (07-01-2015)
 -----------------
 
-- `first` and `last` keywords now use Unix-like patterns instead of plain names
-- `jsdir.jinja.ext` is now available under `jsdir.jinja2.ext`
-- adds `exclude` keyword support
+- ``first`` and ``last`` keywords now use Unix-like patterns instead of plain names
+- ``jsdir.jinja.ext`` is now available under ``jsdir.jinja2.ext``
+- adds ``exclude`` keyword support
 
 v0.2.1 (16-04-2015)
 ...................
