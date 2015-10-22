@@ -2,16 +2,6 @@ django-jsdir - changes
 ======================
 
 
-v0.3 (dev)
-----------
-
-- adds `include` keyword support
-- adds `name` keyword support
-- iterables can be used in patterns lists
-- adds support for Django 1.9
-- drops support for Django < 1.8
-
-
 v0.3 (22-10-2015)
 -----------------
 
@@ -20,6 +10,10 @@ v0.3 (22-10-2015)
 - iterables can be used in patterns lists
 - adds support for Django 1.9
 - drops support for Django < 1.8
+
+v0.3.1 (23-10-2015)
+...................
+- adds absolute paths support
 
 
 v0.2 (07-01-2015)

@@ -210,7 +210,9 @@ Settings
 
 JSDIR_JSURL
     The default url to access the javascript files directory, relative to the
-    static files root. By default it is ``'js'``
+    static files root. Defaults to ``'js'``. This prefix can be bypassed using
+    'absolute' paths (for example ``{% jsdir '/path/to/dir' %}``).
+
 
 .. |copyright| unicode:: 0xA9
 .. _django-pipeline: http://django-pipeline.readthedocs.org
