@@ -15,10 +15,18 @@ However, there are times when you would be happy to only have one - possibly
 compressed - file (in production for example) or to not have to link every
 single standalone js file in your template in development.
 
-django-jsdir aims at solving this issue by providing a way to automatically
-link the js files in a directory tree with a single template tag.
+``django-jsdir`` aims at solving this issue by providing a way to automatically
+link the js files in a directory tree with a single template tag and inclusion,
+exclusion or sorting rules. In this regard it is significantly more flexible
+than django-pipeline_.
 
-django-jsdir works with django 1.6 to 1.8, from python 2.6 to 3.4.
+``django-jsdir`` has been tested with Django 1.8+ and latest compatible minor
+Pyhton versions (2.7 and 3.5). It may work - without guarantee - for earlier
+Django versions.
+
+If you like ``django-jsdir`` and are looking for a way to thank me and/or
+encourage future development, you can send a few mBTC at this Bitcoin address:
+``1EwENyR8RV6tMc1hsLTkPURtn5wJgaBfG9``.
 
 
 Setup
@@ -26,9 +34,8 @@ Setup
 
 1. Install using your prefered method, e.g ``pip install django-jsdir``
 2. You will need both ``'jsdir'`` and ``'django.contrib.staticfiles'`` in your
-   ``INSTALLED_APPS``. If you are using Django 1.6, make sure that ``'jsdir'``
-   is placed `after` ``'django.contrib.staticfiles'``. If you are using Django
-   1.7, ``'jsdir'`` must be placed `before` ``'django.contrib.staticfiles'``.
+   ``INSTALLED_APPS``. Make sure that ``'jsdir'`` is placed `before`
+   ``'django.contrib.staticfiles'``.
 3. If you are using Jinja2, add ``'jsdir.jinja2.ext'`` to your Jinja2
    extensions list
 
@@ -57,13 +64,13 @@ template accordingly. All that entirely manually.
 
 Until now.
 
-With django-jsdir and a few minimal changes, you will not have to worry about
-that anymore. The only thing to do is to get rid of all the ``<script>`` tags
-refering to big_script/\*.js files in your template, and replace them by::
+With ``django-jsdir`` and a few minimal changes, you will not have to worry
+about that anymore. The only thing to do is to get rid of all the ``<script>``
+tags refering to big_script/\*.js files in your template, and replace them by::
 
     {% jsdir 'big_script' %}
 
-django-jsdir will then take care of:
+``django-jsdir`` will then take care of:
 
 1. linking all the scripts nested under big_script directory tree when in
    development mode with files served from the application's static directory.
@@ -82,12 +89,52 @@ files anymore.
 
 
 .. warning:: As in JS, the order in which the files are loaded matters, it is
-   worth noting that the concatenation order will be alphabetic. Use numbers
-   with a fixed number of digits to name your JS files, for example.
+   worth noting that the default concatenation order will be alphabetic. Use
+   numbers with a fixed number of digits to name your JS files, for example.
 
 .. note:: If a directory bar.js is nested into a foo.js directory, no bar.js
    file will be generated. All the files in the bar.js directory will be
    concatenated in the foo.js file.
+
+
+``include`` and ``exclude`` keywords
+++++++++++++++++++++++++++++++++++++
+
+``django-jsdir`` has ways to refine what files in the directory you want to
+explicitely include or exclude.
+
+Use them like that::
+
+   {% jsdir 'libs' expand=True include='jquery/jquery.js; jquery-ui/ui/*.js' exclude='effect-*.js' %}
+
+This will load ``jquery.js`` and all the ``jquery-ui`` files except the effect
+files.
+
+.. note::
+
+    The ``include`` keyword as priority over the ``exclude`` one. When the
+    ``include`` keyword is provided, all files not matching patterns in the
+    ``include`` keyword will be excluded.
+
+
+``name`` keyword
+++++++++++++++++
+
+The ``name`` keyword is only used when you are loading a directory multiple
+times, to avoid name collision on concatenation.
+
+For example::
+
+   {% jsdir 'libs' exclude='jquery-ui/**' %}
+   {% jsdir 'libs' name='jquery-ui' include='jquery-ui/**' %}
+
+will create, in production mode, 2 files ``libs.dir.js`` and
+``libs.jquery-ui.dir.js``. ``libs.dir.js`` will contain all libraries except
+``jquery-ui``, while ``libs.jquery-ui.dir.js`` will contain only ``jquery-ui``.
+
+This is particularly useful when you need to generate 2 files containing
+different libraries that are located in one directory (when using ``bower`` to
+manage your javascript libraries, for example).
 
 
 Inclusion of all files in a directory
@@ -124,7 +171,7 @@ subdirectories that ends with ``'-to_exclude.js'``::
 +++++++++++++++++++++++++++++++
 
 In case you want to load some files first in the included expanded directory,
-django-jsdir provides the ``first`` and ``last`` keywords.
+``django-jsdir`` provides the ``first`` and ``last`` keywords.
 
 Use them like that::
 
@@ -147,10 +194,15 @@ Note that:
    ``first`` and ``last`` keywords are only available when ``expand=True`` is
    used
 
+.. note::
+   If you are using the ``include`` keyword described above, there is no need
+   to relist them in the ``first`` keyword argument. Indeed, the ``include``
+   keyword already has a sorting functionality.
+
 Compression
 -----------
 
-If you wish to have big_script.dir.js compressed, django-jsdir integrates
+If you wish to have big_script.dir.js compressed, ``django-jsdir`` integrates
 without a fuss with django-compressor_. In production, the script gets
 compressed like any other js file. Simply use::
 
@@ -167,5 +219,6 @@ JSDIR_JSURL
     static files root. By default it is ``'js'``
 
 .. |copyright| unicode:: 0xA9
-.. _django-compressor: http://django-compressor.readthedocs.org/en/latest/
+.. _django-pipeline: http://django-pipeline.readthedocs.org
+.. _django-compressor: http://django-compressor.readthedocs.org
 .. _fnmatch: https://docs.python.org/2/library/fnmatch.html
