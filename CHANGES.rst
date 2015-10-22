@@ -2,6 +2,15 @@ django-jsdir - changes
 ======================
 
 
+v0.3 (dev)
+----------
+
+- adds `include` keyword support
+- adds `name` keyword support
+- adds support for Django 1.9
+- drops support for Django < 1.8
+
+
 v0.2 (07-01-2015)
 -----------------
 
