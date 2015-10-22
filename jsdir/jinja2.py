@@ -17,7 +17,7 @@ class JinjaTag(Extension):
     Base class for a simple tag returning a constant string
     """
 
-    tags = set(['jsdir'])
+    tags = {'jsdir'}
 
     def parse(self, parser):
         stream = parser.stream
